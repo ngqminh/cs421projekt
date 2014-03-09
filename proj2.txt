@@ -1,46 +1,90 @@
-CREATE TABLE Ticket(ticket_id int NOT NULL, price DECIMAL(10,2), event_id int, email varchar(100), venue_id int, seat_id varchar(10), FOREIGN KEY(event_id) REFERENCES Event, FOREIGN KEY(email) REFERENCES Attendee, FOREIGN KEY(venue_id, seat_id) REFERENCES Seat, PRIMARY KEY(ticket_id))
+CREATE TABLE Event (event_id INT NOT NULL PRIMARY KEY, venue_id INT NOT NULL, email VARCHAR(50) NOT NULL,  title VARCHAR(50), logo VARCHAR(20), description VARCHAR(100), category VARCHAR(10), startDate TIMESTAMP, endDate TIMESTAMP, FOREIGN KEY(venue_id) REFERENCES Venue, FOREIGN KEY(email) REFERENCES Organizer)
 
-db2 => describe table ticket
+Column                         Type      Type
+name                           schema    name               Length   Scale Nulls
+------------------------------ --------- ------------------ -------- ----- ------
+EVENT_ID                       SYSIBM    INTEGER                   4     0 No    
+VENUE_ID                       SYSIBM    INTEGER                   4     0 No    
+EMAIL                          SYSIBM    VARCHAR                  50     0 No    
+TITLE                          SYSIBM    VARCHAR                  50     0 Yes   
+LOGO                           SYSIBM    VARCHAR                  20     0 Yes   
+DESCRIPTION                    SYSIBM    VARCHAR                 100     0 Yes   
+CATEGORY                       SYSIBM    VARCHAR                  10     0 Yes   
+STARTDATE                      SYSIBM    TIMESTAMP                10     0 Yes   
+ENDDATE                        SYSIBM    TIMESTAMP                10     0 Yes  
+
+CREATE TABLE Venue (venue_id INT NOT NULL PRIMARY KEY, address VARCHAR(20), capacity INT, description VARCHAR(50))
+
+Column                         Type      Type
+name                           schema    name               Length   Scale Nulls
+------------------------------ --------- ------------------ -------- ----- ------
+VENUE_ID                       SYSIBM    INTEGER                   4     0 No    
+ADDRESS                        SYSIBM    VARCHAR                  20     0 Yes   
+CAPACITY                       SYSIBM    INTEGER                   4     0 Yes   
+DESCRIPTION                    SYSIBM    VARCHAR                  50     0 Yes 
+
+CREATE TABLE Seat (seat_id VARCHAR(10) NOT NULL, venue_id INT NOT NULL, seat_type VARCHAR(50), PRIMARY KEY(venue_id, seat_id), FOREIGN KEY(venue_id) REFERENCES Venue ON DELETE CASCADE)
+
+Column                         Type      Type
+name                           schema    name               Length   Scale Nulls
+------------------------------ --------- ------------------ -------- ----- ------
+SEAT_ID                        SYSIBM    VARCHAR                  10     0 No    
+VENUE_ID                       SYSIBM    INTEGER                   4     0 No    
+SEAT_TYPE                      SYSIBM    VARCHAR                  50     0 Yes  
+
+CREATE TABLE Ticket(ticket_id int NOT NULL, price DECIMAL(10,2), event_id int, email varchar(50), venue_id int, seat_id varchar(10), FOREIGN KEY(event_id) REFERENCES Event, FOREIGN KEY(email) REFERENCES Attendee, FOREIGN KEY(venue_id, seat_id) REFERENCES Seat ON DELETE CASCADE, PRIMARY KEY(ticket_id))
+
 Column                         Type      Type
 name                           schema    name               Length   Scale Nulls
 ------------------------------ --------- ------------------ -------- ----- ------
 TICKET_ID                      SYSIBM    INTEGER                   4     0 No    
 PRICE                          SYSIBM    DECIMAL                  10     2 Yes   
 EVENT_ID                       SYSIBM    INTEGER                   4     0 Yes   
-EMAIL                          SYSIBM    VARCHAR                 100     0 Yes   
+EMAIL                          SYSIBM    VARCHAR                  50     0 Yes   
+VENUE_ID                       SYSIBM    INTEGER                   4     0 Yes   
+SEAT_ID                        SYSIBM    VARCHAR                  10     0 Yes  
 
-CREATE TABLE Account(email varchar(100) NOT NULL, password varchar(20) NOT NULL, PRIMARY KEY(email))
+CREATE TABLE Account(email varchar(50) NOT NULL, password varchar(20) NOT NULL, PRIMARY KEY(email))
 
-db2 => describe table account
 Column                         Type      Type
 name                           schema    name               Length   Scale Nulls
 ------------------------------ --------- ------------------ -------- ----- ------
-EMAIL                          SYSIBM    VARCHAR                 100     0 No    
-PASSWORD                       SYSIBM    VARCHAR                  20     0 No    
+EMAIL                          SYSIBM    VARCHAR                  50     0 No    
+PASSWORD                       SYSIBM    VARCHAR                  20     0 No 
 
-CREATE TABLE Attendee(email varchar(100) NOT NULL, fName varchar(50), lName varchar(50), phone_number varchar(15), home_address varchar(100), billing_address varchar(100), FOREIGN KEY(email) REFERENCES Account, PRIMARY KEY(email))
+CREATE TABLE Attendee(email varchar(50) NOT NULL, fName varchar(20), lName varchar(20), phone_number varchar(15), home_address varchar(50), billing_address varchar(50), FOREIGN KEY(email) REFERENCES Account ON DELETE CASCADE, PRIMARY KEY(email))
 
-db2 => describe table attendee
 Column                         Type      Type
 name                           schema    name               Length   Scale Nulls
 ------------------------------ --------- ------------------ -------- ----- ------
-EMAIL                          SYSIBM    VARCHAR                 100     0 No    
-FNAME                          SYSIBM    VARCHAR                  50     0 Yes   
-LNAME                          SYSIBM    VARCHAR                  50     0 Yes   
+EMAIL                          SYSIBM    VARCHAR                  50     0 No    
+FNAME                          SYSIBM    VARCHAR                  20     0 Yes   
+LNAME                          SYSIBM    VARCHAR                  20     0 Yes   
 PHONE_NUMBER                   SYSIBM    VARCHAR                  15     0 Yes   
-HOME_ADDRESS                   SYSIBM    VARCHAR                 100     0 Yes   
-BILLING_ADDRESS                SYSIBM    VARCHAR                 100     0 Yes 
+HOME_ADDRESS                   SYSIBM    VARCHAR                  50     0 Yes   
+BILLING_ADDRESS                SYSIBM    VARCHAR                  50     0 Yes   
 
-CREATE TABLE Organizer(email varchar(100) NOT NULL, name VARCHAR(100), logo VARCHAR(100), about VARCHAR(2500), website VARCHAR(100), FOREIGN KEY(email) REFERENCES Account, PRIMARY KEY(email))
 
-db2 => describe table organizer
+CREATE TABLE Organizer(email varchar(50) NOT NULL, name VARCHAR(20), logo VARCHAR(20), about VARCHAR(50), website VARCHAR(20), FOREIGN KEY(email) REFERENCES Account ON DELETE CASCADE, PRIMARY KEY(email))
+
 Column                         Type      Type
 name                           schema    name               Length   Scale Nulls
 ------------------------------ --------- ------------------ -------- ----- ------
-EMAIL                          SYSIBM    VARCHAR                 100     0 No    
-NAME                           SYSIBM    VARCHAR                 100     0 Yes   
-LOGO                           SYSIBM    VARCHAR                 100     0 Yes   
-ABOUT                          SYSIBM    VARCHAR                2500     0 Yes   
-WEBSITE                        SYSIBM    VARCHAR                 100     0 Yes 
+EMAIL                          SYSIBM    VARCHAR                  50     0 No    
+NAME                           SYSIBM    VARCHAR                  20     0 Yes   
+LOGO                           SYSIBM    VARCHAR                  20     0 Yes   
+ABOUT                          SYSIBM    VARCHAR                  50     0 Yes   
+WEBSITE                        SYSIBM    VARCHAR                  20     0 Yes   
 
+CREATE TABLE Transaction (transaction_id INT NOT NULL PRIMARY KEY, ticket_id INT NOT NULL, email VARCHAR(50) NOT NULL, transaction_date TIMESTAMP, sub_total DECIMAL(10,2), processing_fee DECIMAL(10,2), FOREIGN KEY(ticket_id) REFERENCES Ticket, FOREIGN KEY(email) REFERENCES Account) 
+
+Column                         Type      Type
+name                           schema    name               Length   Scale Nulls
+------------------------------ --------- ------------------ -------- ----- ------
+TRANSACTION_ID                 SYSIBM    INTEGER                   4     0 No    
+TICKET_ID                      SYSIBM    INTEGER                   4     0 No    
+EMAIL                          SYSIBM    VARCHAR                  50     0 No    
+TRANSACTION_DATE               SYSIBM    TIMESTAMP                10     0 Yes   
+SUB_TOTAL                      SYSIBM    DECIMAL                  10     2 Yes   
+PROCESSING_FEE                 SYSIBM    DECIMAL                  10     2 Yes
 
