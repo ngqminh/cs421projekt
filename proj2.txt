@@ -1,11 +1,11 @@
-CREATE TABLE Ticket(ticket_id int NOT NULL, price DOUBLE, event_id int, email varchar(100), FOREIGN KEY(event_id) REFERENCES Event, FOREIGN KEY(email) REFERENCES Attendee, PRIMARY KEY(ticket_id))
+CREATE TABLE Ticket(ticket_id int NOT NULL, price DECIMAL(10,2), event_id int, email varchar(100), venue_id int, seat_id varchar(10), FOREIGN KEY(event_id) REFERENCES Event, FOREIGN KEY(email) REFERENCES Attendee, FOREIGN KEY(venue_id, seat_id) REFERENCES Seat, PRIMARY KEY(ticket_id))
 
 db2 => describe table ticket
 Column                         Type      Type
 name                           schema    name               Length   Scale Nulls
 ------------------------------ --------- ------------------ -------- ----- ------
 TICKET_ID                      SYSIBM    INTEGER                   4     0 No    
-PRICE                          SYSIBM    DOUBLE                    8     0 Yes   
+PRICE                          SYSIBM    DECIMAL                  10     2 Yes   
 EVENT_ID                       SYSIBM    INTEGER                   4     0 Yes   
 EMAIL                          SYSIBM    VARCHAR                 100     0 Yes   
 
@@ -42,4 +42,5 @@ NAME                           SYSIBM    VARCHAR                 100     0 Yes
 LOGO                           SYSIBM    VARCHAR                 100     0 Yes   
 ABOUT                          SYSIBM    VARCHAR                2500     0 Yes   
 WEBSITE                        SYSIBM    VARCHAR                 100     0 Yes 
+
 

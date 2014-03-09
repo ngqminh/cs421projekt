@@ -1,0 +1,10 @@
+Select how many tickets were sold for an event:
+SELECT COUNT(*) FROM ticket WHERE event_id=2
+
+Get a list of everyone who has attended your events, as an organizer with email 'email2':
+SELECT DISTINCT(ticket.email) FROM ticket, event WHERE event.event_id=ticket.event_id AND event.email='email2'
+
+Get seat capacities for every venue
+SELECT venue_id, COUNT(*) capacity FROM seat GROUP BY venue_id
+
+
