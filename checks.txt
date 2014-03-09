@@ -1,0 +1,14 @@
+Check if the ticket entered has a non-negative price
+
+ALTER TABLE ticket \
+ADD CONSTRAINT negative_price \
+CHECK (price >= 0)
+
+DB20000I  The SQL command completed successfully.
+
+db2 => INSERT INTO ticket VALUES(11, -200, 1, 'email1@at.com', 1, 'A1')
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0545N  The requested operation is not allowed because a row does not 
+satisfy the check constraint "CS421G32.TICKET.NEGATIVE_PRICE".  SQLSTATE=23513
+
