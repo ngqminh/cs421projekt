@@ -1,3 +1,5 @@
+This trigger raises an error when we try to add tickets that would go over the venue's capacity for one event.
+
 CREATE TRIGGER checkTickets \
 BEFORE INSERT on Ticket \
 REFERENCING NEW as n \
@@ -5,6 +7,7 @@ FOR EACH ROW \
 WHEN((SELECT count(*) FROM Ticket t WHERE (n.venue_id = t.venue_id) AND (n.event_id = t.event_id)) >= (SELECT Capacity FROM Venue WHERE (n.venue_id = Venue.venue_id))) \
 SIGNAL SQLSTATE '75000' SET MESSAGE_TEXT='Can not have more tickets than capacity'
 
+This trigger prevents two tickets from being in the same seat for the same event.
 CREATE TRIGGER checkSeat \
 BEFORE INSERT on Ticket \
 REFERENCING NEW as n \
