@@ -1,0 +1,9 @@
+CREATE TABLE Ticket(ticket_id int NOT NULL, price DOUBLE, event_id int, email varchar(100), FOREIGN KEY(event_id) REFERENCES Event, FOREIGN KEY(email) REFERENCES Attendee, PRIMARY KEY(ticket_id))
+
+CREATE TABLE Account(email varchar(100) NOT NULL, password varchar(20) NOT NULL, PRIMARY KEY(email))
+
+CREATE TABLE Attendee(email varchar(100) NOT NULL, fName varchar(50), lName varchar(5), phone_number varchar(15), home_address varchar(100), billing_address varchar(100), FOREIGN KEY(email) REFERENCES Account, PRIMARY KEY(email))
+
+CREATE TABLE Organizer(email varchar(100) NOT NULL, name VARCHAR(100), logo VARCHAR(100), about VARCHAR(2500), website VARCHAR(100), FOREIGN KEY(email) REFERENCES Account, PRIMARY KEY(email))
+
+
