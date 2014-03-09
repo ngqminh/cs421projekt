@@ -1,48 +1,66 @@
 Select how many tickets were sold for an event:
 SELECT COUNT(*) as SOLD FROM ticket WHERE event_id=2
 
-Get a list of everyone who has attended your events, as an organizer with email 'email2':
-SELECT DISTINCT(ticket.email) FROM ticket, event WHERE event.event_id=ticket.event_id AND event.email='email4@or.com'
-=======
-SELECT event_id, COUNT(*) Tickets_sold FROM ticket GROUP BY event_id
+SOLD
+-----------
+          3
 
-EVENT_ID    TICKETS_SOLD
------------ ------------
-          1            3
-          2            3
-          3            2
-          4            2
+  1 record(s) selected.
 
-  4 record(s) selected.
-
-
-Get a list of everyone who has attended your events, as an organizer with email 'email2':
+Get a list of everyone who has attended your events, as an organizer with email 'email4@or.com':
 SELECT DISTINCT(ticket.email) FROM ticket, event WHERE event.event_id=ticket.event_id AND event.email='email4@or.com'
 
 EMAIL
-----------------------------------------------------------------------------------------------------
+--------------------------------------------------
 email1@at.com
 email2@at.com
+email3@at.com
 email7@ator.com
-
-  3 record(s) selected.
 
 Get seat capacities for every venue
 SELECT venue_id, COUNT(*) capacity FROM seat GROUP BY venue_id
 
-Get a list of all the tickets owned by a user with event title and start date
-SELECT Ticket_ID, TITLE, StartDate From ((Select Ticket_ID, Event_ID From Ticket WHERE Email = 'email1@at.com') A JOIN event ON A.Event_ID = event.Event_ID )
-=======
 VENUE_ID    CAPACITY
 ----------- -----------
           1          10
           2           8
           3          10
+          4          10
+          5           8
+          6          10
 
-  3 record(s) selected.
+Get a list of all the tickets owned by a user with event title and start date
+SELECT Ticket_ID, TITLE, StartDate From ((Select Ticket_ID, Event_ID From Ticket WHERE Email = 'email1@at.com') A JOIN event ON A.Event_ID = event.Event_ID )
+
+TICKET_ID   TITLE                                              STARTDATE
+----------- -------------------------------------------------- --------------------------
+          1 title1                                             2014-03-14-06.30.00.000000
+          2 title2                                             2014-04-14-06.30.00.000000
+         11 title5                                             2014-06-14-06.30.00.000000
+         12 title6                                             2014-06-04-06.30.00.000000
 
 Get the number of past event categories attended by a user
 Select Category, Count(*) As Number From (Select Ticket_ID, Event_ID From Ticket WHERE Email = 'email1@at.com') A JOIN event ON A.event_id = event.event_id group by Category
 
+CATEGORY   NUMBER
+---------- -----------
+cat1                 1
+cat2                 1
+cat5                 1
+cat6                 1
+
+
 Get the ratio of different events created by category
 Select Category, (Count(Category) * 100 / (Select Count(*) From Event)) as Percent From Event Group by Category
+
+CATEGORY   PERCENT
+---------- -----------
+cat1                11
+cat2                11
+cat3                11
+cat4                11
+cat5                11
+cat6                11
+cat7                11
+cat8                11
+cat9                11
