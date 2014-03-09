@@ -12,3 +12,14 @@ valid Command Line Processor command.  During SQL processing it returned:
 SQL0545N  The requested operation is not allowed because a row does not 
 satisfy the check constraint "CS421G32.TICKET.NEGATIVE_PRICE".  SQLSTATE=23513
 
+ALTER TABLE event ADD CONSTRAINT dates CHECK(endDate > startDate)
+
+DB20000I  The SQL command completed successfully.
+
+insert into event(values(234, 2, 'email6', 'Cool Beans', 'www.random.com/img1.jpg', 'TestingCheck', 'Outside', '2014-03-14-06.30.00', '2014-03-12-18.30.00'))
+
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command.  During SQL processing it returned:
+SQL0545N  The requested operation is not allowed because a row does not 
+satisfy the check constraint "CS421G32.EVENT.DATES".  SQLSTATE=23513
+
