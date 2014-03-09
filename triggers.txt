@@ -1,0 +1,13 @@
+CREATE TRIGGER checkTickets \
+BEFORE INSERT on Ticket \
+REFERENCING NEW as n \
+FOR EACH ROW \
+WHEN((SELECT count(*) FROM Ticket t WHERE (n.venue_id = t.venue_id) AND (n.event_id = t.event_id)) >= (SELECT Capacity FROM Venue WHERE (n.venue_id = Venue.venue_id))) \
+SIGNAL SQLSTATE '75000' SET MESSAGE_TEXT='Can not have more tickets than capacity'
+
+CREATE TRIGGER checkSeat \
+BEFORE INSERT on Ticket \
+REFERENCING NEW as n \
+FOR EACH ROW \
+WHEN((n.venue_id = venue_id) AND (n.seat_id = seat_id)) \
+SIGNAL SQLSTATE '75000' SET MESSAGE_TEXT='Can not have a ticket with the same venue and seat'

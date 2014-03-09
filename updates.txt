@@ -1,0 +1,89 @@
+- This inceases the price of tickets bought by jeff@jeff.ca by 5 dollars
+
+SELECT price FROM ticket WHERE email='jeff@jeff.ca'
+
+PRICE       
+------------
+       25.00
+       37.00
+       37.00
+       37.00
+
+UPDATE ticket SET price = price+5 WHERE email='jeff@jeff.ca'
+DB20000I  The SQL command completed successfully.
+
+SELECT price FROM ticket WHERE email='jeff@jeff.ca'
+
+PRICE       
+------------
+       30.00
+       42.00
+       42.00
+       42.00
+
+- This deletes the tickets jeff@jeff.ca has bought
+
+DELETE FROM Ticket WHERE email='jeff@jeff.ca'
+DB20000I  The SQL command completed successfully.
+
+SELECT ticket_id from ticket where email='jeff@jeff.ca'
+
+TICKET_ID  
+-----------
+
+  0 record(s) selected.
+
+- This sets the seats with seat type 'type1' in venue 1 to 'Extra Normal'
+SELECT * FROM seat WHERE venue_id=1 
+
+SEAT_ID    VENUE_ID    SEAT_TYPE                                         
+---------- ----------- --------------------------------------------------
+A1                   1 type1                                             
+A2                   1 type1                                             
+A3                   1 type1                                             
+A4                   1 type1                                             
+B5                   1 type1                                             
+B6                   1 type2                                             
+B7                   1 type2                                             
+B8                   1 type2                                             
+C10                  1 type2                                             
+C9                   1 type2  
+
+UPDATE seat SET seat_type='Extra Normal' WHERE venue_id=1 AND seat_type='type1'
+DB20000I  The SQL command completed successfully.
+
+SELECT * FROM seat WHERE venue_id=1 
+
+SEAT_ID    VENUE_ID    SEAT_TYPE                                         
+---------- ----------- --------------------------------------------------
+A1                   1 Extra Normal                                      
+A2                   1 Extra Normal                                      
+A3                   1 Extra Normal                                      
+A4                   1 Extra Normal                                      
+B5                   1 Extra Normal                                      
+B6                   1 type2                                             
+B7                   1 type2                                             
+B8                   1 type2                                             
+C10                  1 type2                                             
+C9                   1 type2 
+
+- This inserts websites and logos into the table "external_links"
+CREATE TABLE external_links(website varchar(50) NOT NULL, logo varchar(20), PRIMARY KEY(website))
+DB20000I  The SQL command completed successfully.
+
+INSERT INTO external_links SELECT website, COALESCE(logo, 'nologo.jpg') FROM organizer
+DB20000I  The SQL command completed successfully.
+
+select * from external_links
+
+WEBSITE                                            LOGO                
+-------------------------------------------------- --------------------
+website4                                           logo4               
+website5                                           logo5               
+website6                                           logo6               
+website7                                           logo7               
+website8                                           logo8               
+website10                                          logo10   
+
+
+
