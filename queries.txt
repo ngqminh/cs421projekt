@@ -1,10 +1,17 @@
 Select how many tickets were sold for an event:
-SELECT COUNT(*) FROM ticket WHERE event_id=2
+SELECT COUNT(*) as SOLD FROM ticket WHERE event_id=2
 
 Get a list of everyone who has attended your events, as an organizer with email 'email2':
-SELECT DISTINCT(ticket.email) FROM ticket, event WHERE event.event_id=ticket.event_id AND event.email='email2'
+SELECT DISTINCT(ticket.email) FROM ticket, event WHERE event.event_id=ticket.event_id AND event.email='email4@or.com'
 
 Get seat capacities for every venue
 SELECT venue_id, COUNT(*) capacity FROM seat GROUP BY venue_id
 
+Get a list of all the tickets owned by a user with event title and start date
+SELECT Ticket_ID, TITLE, StartDate From ((Select Ticket_ID, Event_ID From Ticket WHERE Email = 'email1@at.com') A JOIN event ON A.Event_ID = event.Event_ID )
 
+Get the number of past event categories attended by a user
+Select Category, Count(*) As Number From (Select Ticket_ID, Event_ID From Ticket WHERE Email = 'email1@at.com') A JOIN event ON A.event_id = event.event_id group by Category
+
+Get the ratio of different events created by category
+Select Category, (Count(Category) * 100 / (Select Count(*) From Event)) as Percent From Event Group by Category
