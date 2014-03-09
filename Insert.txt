@@ -1,0 +1,73 @@
+INSERT INTO account VALUES('email9@at.com','pw9')
+DB20000I  The SQL command completed successfully.
+EMAIL                                              PASSWORD
+-------------------------------------------------- --------------------
+email1@at.com                                      pw1
+email2@at.com                                      pw2
+email3@at.com                                      pw3
+email4@or.com                                      pw4
+email5@or.com                                      pw5
+email6@or.com                                      pw6
+email7@ator.com                                    pw7
+email8@ator.com                                    pw8
+email9@at.com                                      pw9
+
+  9 record(s) selected.
+
+INSERT INTO attendee VALUES('email9@at.com','fname9','lname9','phone9','home9','billing9')
+DB20000I  The SQL command completed successfully.
+EMAIL                                              FNAME                LNAME                PHONE_NUMBER    HOME_ADDRESS                                       BILLING_ADDRESS
+-------------------------------------------------- -------------------- -------------------- --------------- -------------------------------------------------- --------------------------------------------------
+email1@at.com                                      fname1               lname1               phone1          home1                                              billing1
+email2@at.com                                      fname2               lname2               phone2          home2                                              billing2
+email3@at.com                                      fname3               lname3               phone3          home3                                              billing3
+email7@ator.com                                    fname7               lname7               phone7          home7                                              billing7
+email8@ator.com                                    fname8               lname8               phone8          home8                                              billing8
+email9@at.com                                      fname9               lname9               phone9          home9                                              billing9
+
+  6 record(s) selected.
+
+INSERT INTO venue VALUES(8,'address8',1020,'desc8')
+DB20000I  The SQL command completed successfully.
+VENUE_ID    ADDRESS              CAPACITY    DESCRIPTION
+----------- -------------------- ----------- --------------------------------------------------
+          1 address1                    1000 desc1
+          2 address2                    2000 desc2
+          3 address3                    3000 desc3
+          4 address4                    1500 desc4
+          5 address5                    2020 desc5
+          6 address6                    3010 desc6
+          7 address7                       2 desc7
+          8 address8                    1020 desc8
+
+  8 record(s) selected.
+
+INSERT INTO account VALUES('email10@or.com','pw10')
+DB20000I  The SQL command completed successfully.
+EMAIL                                              PASSWORD
+-------------------------------------------------- --------------------
+email1@at.com                                      pw1
+email2@at.com                                      pw2
+email3@at.com                                      pw3
+email4@or.com                                      pw4
+email5@or.com                                      pw5
+email6@or.com                                      pw6
+email7@ator.com                                    pw7
+email8@ator.com                                    pw8
+email9@at.com                                      pw9
+email10@or.com                                     pw10
+
+  10 record(s) selected.
+
+INSERT INTO organizer VALUES('email10@or.com','name10','logo10','about10','website10')
+DB20000I  The SQL command completed successfully.
+EMAIL                                              NAME                 LOGO                 ABOUT                                              WEBSITE
+-------------------------------------------------- -------------------- -------------------- -------------------------------------------------- --------------------
+email4@or.com                                      name4                logo4                about4                                             website4
+email5@or.com                                      name5                logo5                about5                                             website5
+email6@or.com                                      name6                logo6                about6                                             website6
+email7@ator.com                                    name7                logo7                about7                                             website7
+email8@ator.com                                    name8                logo8                about8                                             website8
+email10@or.com                                     name10               logo10               about10                                            website10
+
+  6 record(s) selected.
