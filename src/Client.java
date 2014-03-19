@@ -1,6 +1,12 @@
 import menu.MenuItem;
 import menu.MenuLeaf;
 import menu.MenuNode;
+import models.Account;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.*;
 
 /**
  * Created by jeffrey on 3/19/2014.
@@ -9,6 +15,8 @@ public class Client {
 
     MenuNode mainMenu;
     Boolean running;
+    Connection con;
+    Statement state;
 
     public Client() {
         createMainMenu();
@@ -23,11 +31,12 @@ public class Client {
     private void clientEngine()
     {
         running = true;
+        connect();
         while (running) {
 
             MenuItem selected = mainMenu.askUser();
-            System.out.print("\nYou selected: ");
             char choice = selected.getLabel();
+            System.out.println("\nYou selected: " + choice);
             HandleSelection(choice);
         }
 
@@ -60,11 +69,83 @@ public class Client {
             case '5': query5(); break;
             case '6': query6(); break;
             case '7': query7(); break;
+            default: break;
         }
     }
 
     private void query1()
     {
+        MenuNode Query1menu = new MenuNode("New Account Menu",">");
+        Query1menu.addMenuItem(new MenuLeaf('1',"New Account"));
+        Query1menu.addMenuItem(new MenuLeaf('2',"Existing Account"));
+
+        MenuNode Query1SubMenu = new MenuNode("Select Type of Account to Create",">");
+        Query1SubMenu.addMenuItem(new MenuLeaf('1',"Attendee"));
+        Query1SubMenu.addMenuItem(new MenuLeaf('2',"Organizer"));
+
+        MenuItem selected = Query1menu.askUser();
+
+        String newUserEmail;
+        String newUserPassword;
+        Account acc;
+        System.out.print("Please Insert your Email: ");
+        try {
+            newUserEmail = readInput();
+            char choice = selected.getLabel();
+            acc = new Account(newUserEmail,state);
+
+            if (choice == '1') {
+                System.out.print("Please Insert your desired pw: ");
+                newUserPassword = readInput();
+                acc.createNewAccount(newUserPassword);
+            }
+
+            if (choice == '1'|| choice == '2') {
+                MenuItem selected2 = Query1SubMenu.askUser();
+                char choice2 = selected2.getLabel();
+
+                if (choice2 == '1') {
+                    System.out.print("Please Insert your First Name: ");
+                    String fname = readInput();
+                    System.out.print("Please Insert your Last Name: ");
+                    String lname = readInput();
+                    System.out.print("Please Insert your Phone Number: ");
+                    String phone = readInput();
+                    System.out.print("Please Insert your Home Address: ");
+                    String home = readInput();
+                    System.out.print("Please Insert your Billing Address: ");
+                    String billing = readInput();
+
+                    acc.createAttendeeAccount(fname,lname,phone,home,billing);
+                } else if (choice2 == '2') {
+                    System.out.print("Please Insert your Name: ");
+                    String name = readInput();
+                    System.out.print("Please Insert your Logo URL: ");
+                    String logo = readInput();
+                    System.out.print("Please Insert your Description: ");
+                    String about = readInput();
+                    System.out.print("Please Insert your Website URL: ");
+                    String website = readInput();
+
+                    acc.createOrganizerAccount(name,logo,about,website);
+                } else {
+                    System.out.println("Error Handing Choice");
+                    return;
+                }
+
+
+
+            } else {
+                System.out.println("Error Handing Choice");
+                return;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error Handling Input");
+            return;
+        }
+
+
 
     }
     private void query2()
@@ -93,4 +174,29 @@ public class Client {
         running = false;
         return;
     }
+
+    public void connect()
+    {
+        try {
+            DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ;
+        } catch (Exception cnfe){
+            System.out.println("Unable to register db2 driver");
+            return;
+        }
+        String url = "jdbc:db2://db2.cs.mcgill.ca:50000/cs421";
+        try {
+            con = DriverManager.getConnection(url, "cs421g32", "[orange]22") ;
+            state = con.createStatement ( ) ;
+        } catch (SQLException e) {
+            System.out.println("Can't connect");
+            return;
+        }
+    }
+
+    private String readInput() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String choice = br.readLine();
+        return choice;
+    }
+
 }
