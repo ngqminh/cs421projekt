@@ -151,18 +151,15 @@ public class Client {
                     acc.createOrganizerAccount(name, logo, about, website);
                 } else {
                     System.out.println("Error Handing Choice");
-                    return;
                 }
 
 
             } else {
                 System.out.println("Error Handing Choice");
-                return;
             }
 
         } catch (IOException e) {
             System.out.println("Error Handling Input. Back to Main Menu");
-            return;
         } catch (SQLException e) {
             System.out.println("SQL Error. Back to Main Menu");
         }
@@ -216,13 +213,10 @@ public class Client {
             nEvent.insertEventData(venueID,organizerEmail,title,logo,desc,cat,sDate,eDate);
         } catch (IOException e) {
             System.out.println("Error Handling Input");
-            return;
         } catch (ParseException e) {
             System.out.println("Error Handling Input");
-            return;
         } catch (SQLException e) {
             System.out.println("SQL Error. Back to Main Menu");
-            return;
         }
 
 
@@ -258,36 +252,37 @@ public class Client {
     private void query4()
     {
     	String userEmail;
-    	AttendeeEvents attEvents;
-    	
+
     	System.out.println("Please enter a user email: ");
     	
     	try 
     	{
     		userEmail = readInput();
-    		attEvents = new AttendeeEvents(userEmail, con);
-    		attEvents.getAttEvents();
-    	}
-    	catch (IOException e) {
+            Account acc = new Account(userEmail,con);
+            acc.getAttendingEvents();
+    	} catch (IOException e) {
     		System.out.println("Error Handling Input");
-    	}
+    	} catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu");
+        }
     }
     private void query5()
     {
     	String userEmail;
-    	CreatedEvents cEvents;
-    	
+
     	System.out.println("Please enter a user email: ");
     	
     	try
     	{
     		userEmail = readInput();
-    		cEvents = new CreatedEvents(userEmail, con);
-    		cEvents.getCreatedEvents();
+            Account acc = new Account(userEmail,con);
+            acc.getCreatedEvents();
     	}
     	catch (IOException e) {
     		System.out.println("Error Handling Input");
-    	}
+    	} catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu.");
+        }
     }
     private void query6()
     {
@@ -297,7 +292,6 @@ public class Client {
     {
         System.out.println("You are now quitting");
         running = false;
-        return;
     }
 
     public void connect()
@@ -314,7 +308,6 @@ public class Client {
             state = con.createStatement ( ) ;
         } catch (SQLException e) {
             System.out.println("Can't connect");
-            return;
         }
     }
 
@@ -339,8 +332,7 @@ public class Client {
 
     private String readInput() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String choice = br.readLine();
-        return choice;
+        return br.readLine();
     }
 
 }

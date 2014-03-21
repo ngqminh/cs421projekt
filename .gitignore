@@ -9,3 +9,5 @@
 *.iws
 
 out/
+
+*.class

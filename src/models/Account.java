@@ -92,47 +92,123 @@ public class Account {
     public void checkAccount() throws SQLException
     {
         try {
-            PreparedStatement pState = con.prepareStatement("SELECT email FROM account where email=?");
+            checkExist();
+            checkAttendee();
+            checkOrganizer();
+
+        } catch (SQLException e) {
+            System.out.println("Error checking account");
+            throw e;
+        }
+    }
+
+    private void checkExist() throws SQLException{
+        PreparedStatement pState = con.prepareStatement("SELECT email FROM account where email=?");
+        pState.setString(1,this.email);
+        ResultSet rs = pState.executeQuery();
+
+        while (rs.next()) {
+            exist = (rs.getString(1).equals(this.email));
+        }
+        pState.close();
+    }
+
+    private void checkAttendee() throws SQLException{
+        PreparedStatement pState = con.prepareStatement("SELECT email FROM attendee where email=?");
+        pState.setString(1,this.email);
+        ResultSet rs = pState.executeQuery();
+        while (rs.next()) {
+            attendee = (rs.getString(1).equals(this.email));
+        }
+        pState.close();
+    }
+
+    private void checkOrganizer() throws SQLException{
+        PreparedStatement pState = con.prepareStatement("SELECT email FROM organizer where email=?");
+        pState.setString(1,this.email);
+        ResultSet rs = pState.executeQuery();
+        while (rs.next()) {
+            organizer = (rs.getString(1).equals(this.email));
+        }
+        pState.close();
+    }
+
+    public void getAttendingEvents() throws SQLException{
+        this.checkAttendee();
+        if (!attendee) {
+            System.out.println("Account is not an Attendee.");
+            return;
+        }
+        try {
+            PreparedStatement pState = con.prepareStatement("SELECT title FROM ticket t, event e WHERE (t.event_id=e.event_id) AND (t.email=?)",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             pState.setString(1,this.email);
             ResultSet rs = pState.executeQuery();
 
-            while (rs.next()) {
-                if (rs.getString(1).equals(this.email)) {
-                    exist = true;
-                } else {
-                    exist = false;
+            if(!rs.first())
+                System.out.println("No events found for attendee " + email + "\n");
+            else
+            {
+                rs.beforeFirst();
+                System.out.println("The events that " + email + " is attending: \n");
+                while(rs.next())
+                {
+                    System.out.println(rs.getString("TITLE"));
                 }
-            }
-
-            PreparedStatement pState2 = con.prepareStatement("SELECT email FROM attendee where email=?");
-            pState2.setString(1,this.email);
-            ResultSet rs2 = pState2.executeQuery();
-            while (rs2.next()) {
-                if (rs2.getString(1).equals(this.email)) {
-                    attendee = true;
-                } else {
-                    attendee = false;
-                }
-            }
-
-
-            PreparedStatement pState3 = con.prepareStatement("SELECT email FROM organizer where email=?");
-            pState3.setString(1,this.email);
-            ResultSet rs3 = pState3.executeQuery();
-            while (rs3.next()) {
-                if (rs3.getString(1).equals(this.email)) {
-                    organizer = true;
-                } else {
-                    organizer = false;
-                }
+                System.out.println();
             }
 
             pState.close();
-            pState2.close();
-            pState3.close();
-
         } catch (SQLException e) {
-            System.out.println("Error Verifying account");
+            System.out.println("Error getting attending events.");
+            throw e;
+        }
+    }
+
+    public void getCreatedEvents() throws SQLException{
+        this.checkOrganizer();
+        if (!organizer) {
+            System.out.println("Account is not an Organizer.");
+            return;
+        }
+        try {
+            PreparedStatement pState = con.prepareStatement("SELECT title FROM event WHERE email=?",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            pState.setString(1,this.email);
+            ResultSet rs = pState.executeQuery();
+
+            if(!rs.first())
+                System.out.println("No events found for organizer " + email + "\n");
+            else
+            {
+                rs.beforeFirst();
+                System.out.println("The events that " + email + " created are: \n");
+                while(rs.next())
+                {
+                    System.out.println(rs.getString("TITLE"));
+                }
+                System.out.println();
+            }
+            pState.close();
+        } catch (SQLException e){
+            System.out.println("Error getting created Events.");
+            throw e;
+        }
+    }
+
+    public boolean isAuthorized(String password) throws SQLException{
+        Boolean auth = false;
+        try {
+            PreparedStatement pState = con.prepareStatement("SELECT password FROM account WHERE email=?",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            pState.setString(1,this.email);
+            ResultSet rs = pState.executeQuery();
+            while (rs.next()) {
+                if (rs.getString(2).equals(password)) {
+                    auth = true;
+                }
+            }
+            pState.close();
+            return auth;
+        } catch (SQLException e){
+            System.out.println("Error authorizing events.");
             throw e;
         }
     }
