@@ -235,8 +235,7 @@ public class Client {
     private void query4()
     {
     	String userEmail;
-    	AttendeeEvents attEvents;
-    	
+
     	System.out.println("Please enter a user email: ");
     	
     	try 
@@ -253,8 +252,7 @@ public class Client {
     private void query5()
     {
     	String userEmail;
-    	CreatedEvents cEvents;
-    	
+
     	System.out.println("Please enter a user email: ");
     	
     	try
