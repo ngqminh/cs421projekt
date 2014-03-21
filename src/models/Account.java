@@ -97,7 +97,7 @@ public class Account {
             checkOrganizer();
 
         } catch (SQLException e) {
-            System.out.println("Error Verifying account");
+            System.out.println("Error checking account");
             throw e;
         }
     }
@@ -204,7 +204,26 @@ public class Account {
             System.out.println("Error getting created Events.");
             throw e;
         }
+    }
 
+    public boolean isAuthorized(String password) throws SQLException{
+        Boolean auth = false;
+        try {
+            PreparedStatement pState = con.prepareStatement("SELECT password FROM account WHERE email=?",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            pState.setString(1,this.email);
+            ResultSet rs = pState.executeQuery();
+            while (rs.next()) {
+                if (rs.getString(2).equals(password)) {
+                    auth = true;
+                }
+            }
+            pState.close();
+            if (auth) return true;
+            return false;
+        } catch (SQLException e){
+            System.out.println("Error authorizing events.");
+            throw e;
+        }
     }
 
     public boolean isOrganizer() {
