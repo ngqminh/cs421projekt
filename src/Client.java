@@ -1,7 +1,5 @@
-import menu.MenuItem;
-import menu.MenuLeaf;
-import menu.MenuNode;
-import models.Account;
+import menu.*;
+import models.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,9 +37,7 @@ public class Client {
             System.out.println("\nYou selected: " + choice);
             HandleSelection(choice);
         }
-
     }
-
 
     private void createMainMenu(){
         MenuNode mainMenu = new MenuNode("Event DB",">");
@@ -158,11 +154,37 @@ public class Client {
     }
     private void query4()
     {
-
+    	String userEmail;
+    	AttendeeEvents attEvents;
+    	
+    	System.out.println("Please enter a user email: ");
+    	
+    	try 
+    	{
+    		userEmail = readInput();
+    		attEvents = new AttendeeEvents(userEmail, con);
+    		attEvents.getAttEvents();
+    	}
+    	catch (IOException e) {
+    		System.out.println("Error Handling Input");
+    	}
     }
     private void query5()
     {
-
+    	String userEmail;
+    	CreatedEvents cEvents;
+    	
+    	System.out.println("Please enter a user email: ");
+    	
+    	try
+    	{
+    		userEmail = readInput();
+    		cEvents = new CreatedEvents(userEmail, con);
+    		cEvents.getCreatedEvents();
+    	}
+    	catch (IOException e) {
+    		System.out.println("Error Handling Input");
+    	}
     }
     private void query6()
     {
