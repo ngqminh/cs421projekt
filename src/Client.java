@@ -2,11 +2,17 @@ import menu.MenuItem;
 import menu.MenuLeaf;
 import menu.MenuNode;
 import models.Account;
+import models.Event;
+import models.Venue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by jeffrey on 3/19/2014.
@@ -15,7 +21,7 @@ public class Client {
 
     MenuNode mainMenu;
     Boolean running;
-    Connection con;
+    static Connection con;
     Statement state;
 
     public Client() {
@@ -92,19 +98,35 @@ public class Client {
         try {
             newUserEmail = readInput();
             char choice = selected.getLabel();
-            acc = new Account(newUserEmail,state);
+            acc = new Account(newUserEmail,con);
+            acc.checkAccount();
+
 
             if (choice == '1') {
+                if (acc.isExist()) {
+                    System.out.println("Account already Exists. Back to Main Menu.");
+                    return;
+                }
                 System.out.print("Please Insert your desired pw: ");
                 newUserPassword = readInput();
                 acc.createNewAccount(newUserPassword);
+
             }
 
             if (choice == '1'|| choice == '2') {
+                if (!acc.isExist()) {
+                    System.out.println("Account doesn't exist. Create New Account first.");
+                    return;
+                }
                 MenuItem selected2 = Query1SubMenu.askUser();
                 char choice2 = selected2.getLabel();
 
+
                 if (choice2 == '1') {
+                    if (acc.isAttendee()) {
+                        System.out.println("Attendee already exists. Back to Main Menu.");
+                        return;
+                    }
                     System.out.print("Please Insert your First Name: ");
                     String fname = readInput();
                     System.out.print("Please Insert your Last Name: ");
@@ -118,6 +140,10 @@ public class Client {
 
                     acc.createAttendeeAccount(fname,lname,phone,home,billing);
                 } else if (choice2 == '2') {
+                    if (acc.isOrganizer()) {
+                        System.out.println("Organizer already exists. Back to Main Menu.");
+                        return;
+                    }
                     System.out.print("Please Insert your Name: ");
                     String name = readInput();
                     System.out.print("Please Insert your Logo URL: ");
@@ -127,12 +153,11 @@ public class Client {
                     System.out.print("Please Insert your Website URL: ");
                     String website = readInput();
 
-                    acc.createOrganizerAccount(name,logo,about,website);
+                    acc.createOrganizerAccount(name, logo, about, website);
                 } else {
                     System.out.println("Error Handing Choice");
                     return;
                 }
-
 
 
             } else {
@@ -141,8 +166,10 @@ public class Client {
             }
 
         } catch (IOException e) {
-            System.out.println("Error Handling Input");
+            System.out.println("Error Handling Input. Back to Main Menu");
             return;
+        } catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu");
         }
 
 
@@ -150,6 +177,60 @@ public class Client {
     }
     private void query2()
     {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            System.out.print("Please Input Organizer Email: ");
+            String organizerEmail = readInput();
+            // TODO: Check if Organizer exists
+            Account acc = new Account(organizerEmail,con);
+            acc.checkAccount();
+            if (!acc.isOrganizer()) {
+                System.out.println("Organizer does not exist. Back to Main Menu.");
+                return;
+            }
+
+            System.out.print("Please Input Venue ID: ");
+            int venueID = Integer.parseInt(readInput());
+            // TODO: Check if venue exists
+            Venue ven = new Venue(venueID,con);
+            if (!ven.isExist()) {
+                System.out.println("Venue does not exist. Back to Main Menu.");
+                return;
+            }
+
+            //Create event
+            Event nEvent = new Event(con);
+
+            // Get next available event ID
+            nEvent.generateEventID();
+
+            // Fill in Event Data
+            System.out.print("Please Input Event Title: ");
+            String title = readInput();
+            System.out.print("Please Input Event Logo: ");
+            String logo = readInput();
+            System.out.print("Please Input Event Description: ");
+            String desc = readInput();
+            System.out.print("Please Input Event Category: ");
+            String cat = readInput();
+            System.out.print("Please Input Event Start Date(dd/MM/yyyy): ");
+            Date sDate = df.parse(readInput());
+            System.out.print("Please Input Event End Date(dd/MM/yyyy): ");
+            Date eDate = df.parse(readInput());
+
+            nEvent.insertEventData(venueID,organizerEmail,title,logo,desc,cat,sDate,eDate);
+        } catch (IOException e) {
+            System.out.println("Error Handling Input");
+            return;
+        } catch (ParseException e) {
+            System.out.println("Error Handling Input");
+            return;
+        } catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu");
+            return;
+        }
+
+
 
     }
     private void query3()
@@ -191,6 +272,25 @@ public class Client {
             System.out.println("Can't connect");
             return;
         }
+    }
+
+    public static Connection getConnection()
+    {
+        try {
+            DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ;
+        } catch (SQLException e){
+            System.out.println("Unable to register db2 driver");
+            return null;
+        }
+        String url = "jdbc:db2://db2.cs.mcgill.ca:50000/cs421";
+        try {
+            con = DriverManager.getConnection(url, "cs421g32", "[orange]22") ;
+        } catch (SQLException e) {
+            System.out.println("Can't connect");
+            return null;
+        }
+
+        return con;
     }
 
     private String readInput() throws IOException {

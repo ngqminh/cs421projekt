@@ -3,7 +3,7 @@ package menu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Created by jeffrey on 3/19/2014.
@@ -13,7 +13,7 @@ public class MenuNode implements MenuItem{
     private String title;
     private String prompt;
 
-    LinkedList<MenuItem> tree;
+    ArrayList<MenuItem> tree;
     MenuLeaf selectedItem;
 
     public MenuNode() {
@@ -32,7 +32,7 @@ public class MenuNode implements MenuItem{
         selectedItem.setLabel(label);
         selectedItem.setDescription(title);
 
-        this.tree = new LinkedList<MenuItem>();
+        this.tree = new ArrayList<MenuItem>();
     }
 
 
