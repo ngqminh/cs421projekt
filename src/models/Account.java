@@ -92,7 +92,7 @@ public class Account {
     public void checkAccount() throws SQLException
     {
         try {
-            checkAccount();
+            checkExist();
             checkAttendee();
             checkOrganizer();
 
@@ -108,11 +108,7 @@ public class Account {
         ResultSet rs = pState.executeQuery();
 
         while (rs.next()) {
-            if (rs.getString(1).equals(this.email)) {
-                exist = true;
-            } else {
-                exist = false;
-            }
+            exist = (rs.getString(1).equals(this.email));
         }
         pState.close();
     }
@@ -122,11 +118,7 @@ public class Account {
         pState.setString(1,this.email);
         ResultSet rs = pState.executeQuery();
         while (rs.next()) {
-            if (rs.getString(1).equals(this.email)) {
-                attendee = true;
-            } else {
-                attendee = false;
-            }
+            attendee = (rs.getString(1).equals(this.email));
         }
         pState.close();
     }
@@ -136,11 +128,7 @@ public class Account {
         pState.setString(1,this.email);
         ResultSet rs = pState.executeQuery();
         while (rs.next()) {
-            if (rs.getString(1).equals(this.email)) {
-                organizer = true;
-            } else {
-                organizer = false;
-            }
+            organizer = (rs.getString(1).equals(this.email));
         }
         pState.close();
     }
@@ -156,7 +144,7 @@ public class Account {
             pState.setString(1,this.email);
             ResultSet rs = pState.executeQuery();
 
-            if(rs.first() == false)
+            if(!rs.first())
                 System.out.println("No events found for attendee " + email + "\n");
             else
             {
@@ -187,7 +175,7 @@ public class Account {
             pState.setString(1,this.email);
             ResultSet rs = pState.executeQuery();
 
-            if(rs.first() == false)
+            if(!rs.first())
                 System.out.println("No events found for organizer " + email + "\n");
             else
             {
@@ -218,8 +206,7 @@ public class Account {
                 }
             }
             pState.close();
-            if (auth) return true;
-            return false;
+            return auth;
         } catch (SQLException e){
             System.out.println("Error authorizing events.");
             throw e;
