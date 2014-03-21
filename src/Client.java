@@ -228,10 +228,33 @@ public class Client {
 
 
     }
+    
     private void query3()
     {
-
+    	String userEmail;
+    	int ticketID;
+    	Ticket bTicket;
+    	
+    	try
+    	{
+    		System.out.println("Please enter a user email: ");
+    		userEmail = readInput();
+    		System.out.println("Please enter the ticket ID: ");
+    		ticketID = Integer.parseInt(readInput());
+    		bTicket = new Ticket(ticketID, userEmail, con);
+    		bTicket.buyTicket();
+    	}
+    	catch (IOException e) {
+    		System.out.println("Error Handling Input");
+    	}
+    	catch(NumberFormatException e) {
+    		System.out.println("Invalid Ticket ID \n");
+    	}
+    	catch(SQLException e) {
+    		System.out.println("An SQL Error has Occurred");
+    	}
     }
+    
     private void query4()
     {
     	String userEmail;
