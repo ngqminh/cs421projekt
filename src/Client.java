@@ -242,12 +242,13 @@ public class Client {
     	try 
     	{
     		userEmail = readInput();
-    		attEvents = new AttendeeEvents(userEmail, con);
-    		attEvents.getAttEvents();
-    	}
-    	catch (IOException e) {
+            Account acc = new Account(userEmail,con);
+            acc.getAttendingEvents();
+    	} catch (IOException e) {
     		System.out.println("Error Handling Input");
-    	}
+    	} catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu");
+        }
     }
     private void query5()
     {
@@ -259,12 +260,14 @@ public class Client {
     	try
     	{
     		userEmail = readInput();
-    		cEvents = new CreatedEvents(userEmail, con);
-    		cEvents.getCreatedEvents();
+            Account acc = new Account(userEmail,con);
+            acc.getCreatedEvents();
     	}
     	catch (IOException e) {
     		System.out.println("Error Handling Input");
-    	}
+    	} catch (SQLException e) {
+            System.out.println("SQL Error. Back to Main Menu.");
+        }
     }
     private void query6()
     {
