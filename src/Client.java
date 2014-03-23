@@ -56,7 +56,7 @@ public class Client {
 
         mainMenu.addMenuItem(new MenuLeaf('1',"Create A New User"));
         mainMenu.addMenuItem(new MenuLeaf('2',"Create A New Event"));
-        mainMenu.addMenuItem(new MenuLeaf('3',"Create A New Venue"));
+        mainMenu.addMenuItem(new MenuLeaf('3',"Purchase a Ticket"));
         mainMenu.addMenuItem(new MenuLeaf('4',"List Attending Events For User"));
         mainMenu.addMenuItem(new MenuLeaf('5',"List Created Events For User"));
         mainMenu.addMenuItem(new MenuLeaf('6',"Quit"));
@@ -165,7 +165,7 @@ public class Client {
         } catch (IOException e) {
             System.out.println("Error Handling Input. Back to Main Menu");
         } catch (SQLException e) {
-            System.out.println("SQL Error. Back to Main Menu");
+            System.out.println("SQL Error code: " + e.getErrorCode() + ". Back to Main Menu.");
         }
 
 
@@ -220,7 +220,7 @@ public class Client {
         } catch (ParseException e) {
             System.out.println("Error Handling Input");
         } catch (SQLException e) {
-            System.out.println("SQL Error. Back to Main Menu");
+            System.out.println("SQL Error code: " + e.getErrorCode() + ". Back to Main Menu.");
         } catch (verificationException e) {
             System.out.println("Incorrect Password");
         }
@@ -234,6 +234,8 @@ public class Client {
     	String userEmail;
     	int ticketID;
     	Ticket bTicket;
+        Transaction trans;
+        double processingFee = 1.00;
     	
     	try
     	{
@@ -243,6 +245,9 @@ public class Client {
     		ticketID = Integer.parseInt(readInput());
     		bTicket = new Ticket(ticketID, userEmail, con);
     		bTicket.buyTicket();
+            trans = new Transaction(con,ticketID,processingFee);
+            trans.create(userEmail);
+
     	}
     	catch (IOException e) {
     		System.out.println("Error Handling Input");
@@ -251,7 +256,7 @@ public class Client {
     		System.out.println("Invalid Ticket ID \n");
     	}
     	catch(SQLException e) {
-    		System.out.println("An SQL Error has Occurred");
+    		System.out.println("SQL Error code: " + e.getErrorCode() + ". Back to Main Menu.");
     	} catch (verificationException e) {
             System.out.println("Incorrect Password");
         }
@@ -269,7 +274,7 @@ public class Client {
             Account acc = new Account(userEmail,con);
             acc.getAttendingEvents();
     	} catch (SQLException e) {
-            System.out.println("SQL Error. Back to Main Menu");
+            System.out.println("SQL Error code: " + e.getErrorCode() + ". Back to Main Menu.");
         } catch (verificationException e) {
             System.out.println("Incorrect Password");
         }
@@ -286,7 +291,7 @@ public class Client {
             Account acc = new Account(userEmail,con);
             acc.getCreatedEvents();
     	} catch (SQLException e) {
-            System.out.println("SQL Error. Back to Main Menu.");
+            System.out.println("SQL Error code: " + e.getErrorCode() + ". Back to Main Menu.");
         } catch (verificationException e) {
             System.out.println("Incorrect Password");
         }

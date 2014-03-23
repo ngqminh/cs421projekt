@@ -10,6 +10,7 @@ import java.util.Date;
 public class Event {
 
     private int eventID;
+    private PreparedStatement pState;
 
 
     private Connection con;
@@ -24,7 +25,7 @@ public class Event {
 
         try {
 
-            PreparedStatement pState = con.prepareStatement("SELECT Max(event_id) from event");
+            pState = con.prepareStatement("SELECT Max(event_id) from event");
 
             String newestEventIDQuery = "SELECT Max(event_id) from event";
             ResultSet rs = pState.executeQuery();
@@ -36,13 +37,15 @@ public class Event {
         } catch (SQLException e) {
             System.out.println("Error with Generating Event ID");
             throw e;
+        } finally {
+           pState.close();
         }
     }
 
     public void insertEventData(int venueID, String organizerEmail, String title, String logo, String desc, String cat, java.util.Date sDate, java.util.Date eDate) throws SQLException{
 
         try {
-            PreparedStatement pState = con.prepareStatement("INSERT INTO event VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            pState = con.prepareStatement("INSERT INTO event VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
             pState.setInt(1,this.eventID);
             pState.setInt(2,venueID);
             pState.setString(3,organizerEmail);
@@ -54,11 +57,12 @@ public class Event {
             pState.setDate(9,new java.sql.Date(eDate.getTime()));
 
             pState.executeUpdate();
-            pState.close();
         } catch (SQLException e) {
             System.out.println("Error Inserting Event Data");
             e.printStackTrace();
             throw e;
+        } finally {
+            pState.close();
         }
     }
 

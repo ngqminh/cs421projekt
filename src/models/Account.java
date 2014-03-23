@@ -36,7 +36,7 @@ public class Account {
             if (error == -803) {
                 System.out.println("User Already Exists");
             } else {
-                System.out.println("Error with Creating Account");
+                System.out.println("Error with Creating Account" );
             }
             throw e;
         }
