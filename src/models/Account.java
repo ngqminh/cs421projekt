@@ -201,7 +201,7 @@ public class Account {
             pState.setString(1,this.email);
             ResultSet rs = pState.executeQuery();
             while (rs.next()) {
-                if (rs.getString(2).equals(password)) {
+                if (rs.getString(1).equals(password)) {
                     auth = true;
                 }
             }

@@ -14,12 +14,16 @@ import java.util.Date;
 /**
  * Created by jeffrey on 3/19/2014.
  */
+
 public class Client {
 
     MenuNode mainMenu;
     Boolean running;
     static Connection con;
     Statement state;
+
+    Boolean verified;
+    String verifiedEmail;
 
     public Client() {
         createMainMenu();
@@ -34,9 +38,12 @@ public class Client {
     private void clientEngine()
     {
         running = true;
+        verified = false;
         connect();
         while (running) {
-
+            if (verified) {
+                System.out.println("Logged in as "+ verifiedEmail);
+            }
             MenuItem selected = mainMenu.askUser();
             char choice = selected.getLabel();
             System.out.println("\nYou selected: " + choice);
@@ -47,14 +54,12 @@ public class Client {
     private void createMainMenu(){
         MenuNode mainMenu = new MenuNode("Event DB",">");
 
-
         mainMenu.addMenuItem(new MenuLeaf('1',"Create A New User"));
         mainMenu.addMenuItem(new MenuLeaf('2',"Create A New Event"));
         mainMenu.addMenuItem(new MenuLeaf('3',"Create A New Venue"));
         mainMenu.addMenuItem(new MenuLeaf('4',"List Attending Events For User"));
         mainMenu.addMenuItem(new MenuLeaf('5',"List Created Events For User"));
-        mainMenu.addMenuItem(new MenuLeaf('6',"Modify Event"));
-        mainMenu.addMenuItem(new MenuLeaf('7',"Quit"));
+        mainMenu.addMenuItem(new MenuLeaf('6',"Quit"));
 
         this.mainMenu = mainMenu;
 
@@ -69,7 +74,6 @@ public class Client {
             case '4': query4(); break;
             case '5': query5(); break;
             case '6': query6(); break;
-            case '7': query7(); break;
             default: break;
         }
     }
@@ -171,8 +175,8 @@ public class Client {
     {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            System.out.print("Please Input Organizer Email: ");
-            String organizerEmail = readInput();
+            //System.out.print("Please Input Organizer Email: ");
+            String organizerEmail =login();
             // TODO: Check if Organizer exists
             Account acc = new Account(organizerEmail,con);
             acc.checkAccount();
@@ -217,6 +221,8 @@ public class Client {
             System.out.println("Error Handling Input");
         } catch (SQLException e) {
             System.out.println("SQL Error. Back to Main Menu");
+        } catch (verificationException e) {
+            System.out.println("Incorrect Password");
         }
 
 
@@ -231,8 +237,8 @@ public class Client {
     	
     	try
     	{
-    		System.out.println("Please enter a user email: ");
-    		userEmail = readInput();
+    		//System.out.println("Please enter a user email: ");
+    		userEmail = login();
     		System.out.println("Please enter the ticket ID: ");
     		ticketID = Integer.parseInt(readInput());
     		bTicket = new Ticket(ticketID, userEmail, con);
@@ -246,49 +252,46 @@ public class Client {
     	}
     	catch(SQLException e) {
     		System.out.println("An SQL Error has Occurred");
-    	}
+    	} catch (verificationException e) {
+            System.out.println("Incorrect Password");
+        }
     }
     
     private void query4()
     {
     	String userEmail;
 
-    	System.out.println("Please enter a user email: ");
+       	//System.out.println("Please enter a user email: ");
     	
     	try 
     	{
-    		userEmail = readInput();
+    		userEmail = login();
             Account acc = new Account(userEmail,con);
             acc.getAttendingEvents();
-    	} catch (IOException e) {
-    		System.out.println("Error Handling Input");
     	} catch (SQLException e) {
             System.out.println("SQL Error. Back to Main Menu");
+        } catch (verificationException e) {
+            System.out.println("Incorrect Password");
         }
     }
     private void query5()
     {
     	String userEmail;
 
-    	System.out.println("Please enter a user email: ");
+    	//System.out.println("Please enter a user email: ");
     	
     	try
     	{
-    		userEmail = readInput();
+    		userEmail = login();
             Account acc = new Account(userEmail,con);
             acc.getCreatedEvents();
-    	}
-    	catch (IOException e) {
-    		System.out.println("Error Handling Input");
     	} catch (SQLException e) {
             System.out.println("SQL Error. Back to Main Menu.");
+        } catch (verificationException e) {
+            System.out.println("Incorrect Password");
         }
     }
     private void query6()
-    {
-
-    }
-    private void query7()
     {
         System.out.println("You are now quitting");
         running = false;
@@ -323,8 +326,8 @@ public class Client {
         try {
             con = DriverManager.getConnection(url, "cs421g32", "[orange]22") ;
         } catch (SQLException e) {
-            System.out.println("Can't connect");
-            return null;
+            System.out.println("Can't connect. Closing Client");
+            System.exit(0);
         }
 
         return con;
@@ -333,6 +336,33 @@ public class Client {
     private String readInput() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         return br.readLine();
+    }
+
+    private String login() throws verificationException{
+        String pw;
+        if (this.verified) {
+            return this.verifiedEmail;
+        }
+        System.out.println("Please Input your Email: ");
+        try {
+            this.verifiedEmail = readInput();
+            System.out.println("Please Input your Password: ");
+            pw = readInput();
+        } catch (IOException e) {
+            throw new verificationException();
+        }
+
+        Account acc = new Account(this.verifiedEmail,con);
+        try {
+            if (acc.isAuthorized(pw)) {
+                this.verified = true;
+                return this.verifiedEmail;
+            } else {
+                throw new verificationException();
+            }
+        } catch (SQLException e) {
+            throw new verificationException();
+        }
     }
 
 }
