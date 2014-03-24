@@ -1,4 +1,13 @@
-Q1) 
+FILES TO GRADE:
+Q1 - q1.clp
+Q2 - q2.clp
+q3 - raffle.java
+q4 - Application
+q5 - q5.clp
+bonus - bonus.py
+
+
+Q1)
 
 CREATE TABLE attendeeXML(email VARCHAR(50) NOT NULL PRIMARY KEY, Info XML)
 	This table is based on the attendee table and contains all the information that it would normally contain such as name and their information stored in XML. 
@@ -67,7 +76,97 @@ home9
 
   2 record(s) selected.
 
-  
+There is no change in our er schema diagram.
+
+Q2)
+When adding or removing a seat, we will update the capacity of the venue.
+First case - Effect happens
+db2 => select * from venue
+
+VENUE_ID    ADDRESS              CAPACITY    DESCRIPTION
+----------- -------------------- ----------- --------------------------------------------------
+          1 address1                      10 desc1
+          2 address2                       8 desc2
+          3 address3                      10 desc3
+          4 address4                      10 desc4
+          5 address5                       8 desc5
+          6 address6                      10 desc6
+          7 address8                       - desc8
+
+  7 record(s) selected.
+db2 => insert into seat values ('A11',6,'type1')
+DB20000I  The SQL command completed successfully.
+db2 => select * from venue
+
+VENUE_ID    ADDRESS              CAPACITY    DESCRIPTION
+----------- -------------------- ----------- --------------------------------------------------
+          1 address1                      10 desc1
+          2 address2                       8 desc2
+          3 address3                      10 desc3
+          4 address4                      10 desc4
+          5 address5                       8 desc5
+          6 address6                      11 desc6
+          7 address8                       - desc8
+
+  7 record(s) selected.
+
+Second case - no effect
+db2 => select * from venue
+
+VENUE_ID    ADDRESS              CAPACITY    DESCRIPTION
+----------- -------------------- ----------- --------------------------------------------------
+          1 address1                      10 desc1
+          2 address2                       8 desc2
+          3 address3                      10 desc3
+          4 address4                      10 desc4
+          5 address5                       8 desc5
+          6 address6                      10 desc6
+          7 address8                       - desc8
+
+  7 record(s) selected.
+
+b2 => update seat set seat_type = 'type3' where venue_id = 6 AND seat_id = 'A9'
+DB20000I  The SQL command completed successfully.
+
+db2 => select * from venue
+
+VENUE_ID    ADDRESS              CAPACITY    DESCRIPTION
+----------- -------------------- ----------- --------------------------------------------------
+          1 address1                      10 desc1
+          2 address2                       8 desc2
+          3 address3                      10 desc3
+          4 address4                      10 desc4
+          5 address5                       8 desc5
+          6 address6                      10 desc6
+          7 address8                       - desc8
+
+  7 record(s) selected.
+
+Q3) Our database is not changed by using the procedure. The Procedure adds features on top of our database.
+This procedure is a raffle where it randomly selects one of our attendees and returns the email for that attendee.
+
+Q4) The program is pretty self-explanatory.
+
+At the beginning, you will be given a menu with numbers. You type in the number then press enter.
+
+*There is a login system. You need to verify your account only once at certain operations.
+Once logged in, you will not need to enter email again. To switch account, restart application.
+We first create an account.
+-Enter an email.
+-Enter a password.
+Now select which type of account to create and fill in the info. Attendee account for attending events. Organizer account for organizing events.
+Attendee Account -
+    - We can now List our attending events.
+    - We can purchase a ticket for our account
+        - Enter the ticket number (Example: 103 or 104)
+    - Now list our attending events again.
+
+Organizer Account -
+    - We can list our created events.
+    - We can now create an event.
+    - Now we can list our created events again.
+
+
 Q5)
 
 CREATE INDEX categories ON event(category, title) 
@@ -77,3 +176,8 @@ CREATE INDEX eventSeats ON ticket(event_id, seat_id) CLUSTER
 	This index is useful when tickets are being queried for. Because there are many tickets, it is useful to have them ordered first by the event and then by the seats.
 	It is clustered on the event_id because queries and searches often involve looking at all the seats of an event and would make the query considerably more efficient if it was clustered.
 	In addition, most of the tickets are created all at once depending on the venue and event which means there is generally not many inserts afterwards which would be more costly in a clustered index.
+
+BONUS PROCEDURE)
+For our bonus procedure, It calculates how much tax our company is paying based on our processing fees.
+It shows how much tax per month. Just need to run procedure.
+Month: 2014-03, Taxes paid: 4.17
