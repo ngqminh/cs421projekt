@@ -1,0 +1,79 @@
+Q1) 
+
+CREATE TABLE attendeeXML(email VARCHAR(50) NOT NULL PRIMARY KEY, Info XML)
+	This table is based on the attendee table and contains all the information that it would normally contain such as name and their information stored in XML. 
+
+INSERT INTO attendeeXML(email, Info) VALUES('email1@at.com', \
+'<attendee email = "email1@at.com"> \
+ <fname>fname1</fname> \
+ <lname>lname1</lname> \
+ <phone_number>phone1</phone_number> \
+ <home_address>home1</home_address> \
+</attendee>')
+
+INSERT INTO attendeeXML(email, Info) VALUES('email2@at.com', \
+'<attendee email = "email2@at.com"> \
+ <fname>fname2</fname> \
+ <lname>lname2</lname> \
+ <phone_number>phone2</phone_number> \
+ <home_address>home2</home_address> \
+</attendee>')
+
+INSERT INTO attendeeXML(email, Info) VALUES('email3@at.com', \
+'<attendee email = "email3@at.com"> \
+ <fname>fname3</fname> \
+ <lname>lname3</lname> \
+ <phone_number>phone3</phone_number> \
+ <home_address>home3</home_address> \
+</attendee>')
+
+INSERT INTO attendeeXML(email, Info) VALUES('email7@ator.com', \
+'<attendee email = "email7@ator.com"> \
+ <fname>fname7</fname> \
+ <lname>lname7</lname> \
+ <phone_number>phone7</phone_number> \
+ <home_address>home7</home_address> \
+</attendee>')
+
+INSERT INTO attendeeXML(email, Info) VALUES('email8@ator.com', \
+'<attendee email = "email8@ator.com"> \
+ <fname>fname8</fname> \
+ <lname>lname8</lname> \
+ <phone_number>phone8</phone_number> \
+ <home_address>home8</home_address> \
+</attendee>')
+
+INSERT INTO attendeeXML(email, Info) VALUES('email9@ator.com', \
+'<attendee email = "email9ator.com"> \
+ <fname>fname9</fname> \
+ <lname>lname2</lname> \
+ <phone_number>phone9</phone_number> \
+ <home_address>home9</home_address> \
+</attendee>')
+
+The XML data contains attendees with an email attribute. Attendees also have first name, last name, phone number, and home address fields. 
+
+XQUERY \
+for $x in db2-fn:xmlcolumn("ATTENDEEXML.INFO")/attendee \
+where $x[lname="lname2"] \
+return string($x/home_address)
+
+This query looks at all the attendees who have the last name "lname2" and returns their home addresses.
+
+1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+------------------------------------------------------------------------------------------------------------------------------------------------------
+home2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+home9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+  2 record(s) selected.
+
+  
+Q5)
+
+CREATE INDEX categories ON event(category, title) 
+	This index is useful because often times queries involve looking up the events of a specific category as well as other events in the same category. 
+	
+CREATE INDEX eventSeats ON ticket(event_id, seat_id) CLUSTER
+	This index is useful when tickets are being queried for. Because there are many tickets, it is useful to have them ordered first by the event and then by the seats.
+	It is clustered on the event_id because queries and searches often involve looking at all the seats of an event and would make the query considerably more efficient if it was clustered.
+	In addition, most of the tickets are created all at once depending on the venue and event which means there is generally not many inserts afterwards which would be more costly in a clustered index.
