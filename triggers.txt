@@ -14,3 +14,12 @@ REFERENCING NEW as n \
 FOR EACH ROW \
 WHEN((n.venue_id = venue_id) AND (n.seat_id = seat_id)) \
 SIGNAL SQLSTATE '75000' SET MESSAGE_TEXT='Can not have a ticket with the same venue and seat'
+
+This trigger will check/update the Venue's capacity based on how many seats exist for corresponding venue.
+CREATE TRIGGER updateCapacity
+AFTER INSERT on Seat
+Referencing new as nSeat
+for each row
+begin atomic
+UPDATE venue v SET Capacity = (Select count(*) from Seat s where s.venue_id = v.venue_id group by Venue_id)
+end
