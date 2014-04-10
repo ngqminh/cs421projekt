@@ -1,0 +1,9 @@
+The schema looks nested right after the group by statement. 
+It has a description of: 
+
+grouped: {group: int,filtered: {(date: bytearray,type: chararray,parl: int,prov: chararray,riding: chararray,lastname: chararray,firstname: chararray,gender: chararray,occupation: chararray,party: chararray,votes: int,percent: double,elected: int)}}
+
+2014-04-10 21:31:45
+2014-04-10 21:36:04
+
+It took about 4:19 to run.
